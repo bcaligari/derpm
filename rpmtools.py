@@ -124,7 +124,7 @@ class IterRPMlist(object):
 
 
 class RPMlist(object):
-    """A queryable collection of rpms."""
+    """A queryable collection of RPM objects."""
 
     def __init__(self, rpmlist):
         """Initialise an RPMlist"""

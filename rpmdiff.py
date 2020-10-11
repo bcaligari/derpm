@@ -72,7 +72,7 @@ def main(file0, file1):
       ==   present in both at same revision
       <<   version in first lower than one in second
       >>   version in first higher than one in second
-      :+   multiversion install present in list but not second
+      :+   multiversion install present in first but not second
       :-   multiversion install present in second but not first
       :=   multiversion install present in both
     """

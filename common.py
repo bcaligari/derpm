@@ -1,5 +1,25 @@
+import os
 import re
+import sys
 import logging
+import configparser
+
+
+config = configparser.ConfigParser()
+_config_paths = ["norbury.ini", "~/.norburyrc"]
+_config_paths = map(os.path.expanduser, _config_paths)
+config.read(_config_paths)
+config["DEFAULT"]["data_dir"] = os.path.expanduser(config["DEFAULT"]["data_dir"])
+try:
+    os.mkdir(config["DEFAULT"]["data_dir"])
+except FileExistsError:
+    pass
+
+
+def main_dead_end(name):
+    """Little reminder that you shouldn't be calling name in vain"""
+    print(f"{name} is not meant to be called directly.", file=sys.stderr)
+    sys.exit(0)
 
 
 def pretty_table(table, fmt="csv", colnames=None):
@@ -80,4 +100,4 @@ def read_rpm_list(filename):
 
 
 if __name__ == "__main__":
-    pass
+    main_dead_end(__file__)
