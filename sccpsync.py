@@ -173,15 +173,15 @@ def initdb(db, baseurl, accept, anyarch=False, cachedir=None):
 )
 def main(cleanup, refresh, nocache, anyarch):
     """Synchronise SCC package data to local sqlite3 database."""
-    db = f"{config['DEFAULT']['data_dir']}/{config['SCCP']['db_name']}"
+    db_file = sccpdb.db_file
     cache_dir = f"{config['DEFAULT']['data_dir']}/{config['SCCP']['cache_subdir']}"
     baseurl = config["SCCP"]["api_base"]
     accept = config["SCCP"]["accept"]
     if cleanup or refresh:
-        sccp_cleanup(db, cache_dir)
+        sccp_cleanup(db_file, cache_dir)
     if cleanup and not refresh:
         sys.exit(0)
-    initdb(db, baseurl, accept, anyarch, None if nocache else cache_dir)
+    initdb(db_file, baseurl, accept, anyarch, None if nocache else cache_dir)
     return 0
 
 

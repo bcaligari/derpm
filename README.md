@@ -2,18 +2,18 @@
 
 A collection of tools to help with:
 
-* Querying the SCC package API.
-* Establishing the provenance of RPMs from the `rpm -qa` output on a SLE server.
-* Comparing the version differences between two lists of RPMs.
+* `sccpsync` - Caching the SCC packages API to a local sqlite3.
+* `sccpq` - Querying the SCC package API via the local sqlite3 cached copy.
+* `slebase` - Establishing the provenance of RPMs from the `rpm -qa` output on
+   a SLE server.
+* `rpmdiff` - Comparing the version differences between two lists of RPMs.
 
 These scripts are written in Python 3.8 for my own entertainment and use.  They
 are inspired by but in no other way related to my day job.
 
-## rpmdiff
+## `rpmdiff`
 
 Report on the RPM version differences between two lists of RPMs.
-
-### Usage
 
 ```{text}
 Usage: rpmdiff.py [OPTIONS] FILE0 FILE1
@@ -23,8 +23,6 @@ The files can be:
 
 * Plain output of `rpm -qa`.
 * The `rpm.txt` from a `supportconfig` archive.
-
-### Results
 
 Matching packages are listed side by side with the first column indicating
 the relationship between the version from both lists:
@@ -40,11 +38,9 @@ the relationship between the version from both lists:
     :=   multiversion install present in both
 ```
 
-## sccp-sync
+## `sccpsync`
 
 Synchronise SCC package data to local sqlite3 database.
-
-### Usage
 
 ```{text}
 Usage: sccp-sync.py [OPTIONS]
@@ -57,7 +53,43 @@ Options:
   --help     Show this message and exit.
 ```
 
+### `slebase`
+
+Identify product(s) associated with a base containing an RPM.
+
+This is most useful to identify:
+
+* Packages that were not included with a particular SLE product (e.g. `SLES_SAP/12.3/x86_64`).
+* Packages that belong to a module and extension rather than the base product.
+
+The output is formatted so that it can be easily `grep`ed.
+
+```{text}
+Usage: slebase.py [OPTIONS] BASE RPMLIST
+
+  Legend:
+    ? Doesn't appear to be "<name>-<version>-<release>.<arch>[.rpm]".
+    - Not found in base product.
+    = Found in repo of base product.
+    + From a module or extension that can be enabled on base.
+```
+
+#### Which packages could not be found in this product
+
+`$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | grep '^-'`
+
+#### List packages which need an additional module activated
+
+`$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | sed -ne '/^+/,/^$/p'`
+
 ## Implementation
+
+### Known issues
+
+### TODO
+
+* Make it easier to call the scripts.
+* Put some better error handling rather than cascade to Python exceptions.
 
 ### Files
 

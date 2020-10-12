@@ -16,10 +16,15 @@ except FileExistsError:
     pass
 
 
+def error_exit(msg, exit_code=1):
+    """Print msg and exit with exit_code."""
+    print(msg, file=sys.stderr)
+    sys.exit(exit_code)
+
+
 def main_dead_end(name):
     """Little reminder that you shouldn't be calling name in vain"""
-    print(f"{name} is not meant to be called directly.", file=sys.stderr)
-    sys.exit(0)
+    error_exit(f"{name} is not meant to be called directly.")
 
 
 def pretty_table(table, fmt="csv", colnames=None):

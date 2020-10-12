@@ -77,6 +77,15 @@ class RPM(object):
         """Initialise RPM from dict of parts"""
         return cls(rpm["name"], rpm["version"], rpm["release"], rpm["arch"])
 
+    def to_dict(self):
+        """Return a dict representation of the four name components."""
+        return {
+            "name": self._name,
+            "arch": self._arch,
+            "version": str(self._version),
+            "release": str(self._release),
+        }
+
     def __lt__(self, other):
         return (self._name, self._version, self._release, self._arch) < (
             other._name,

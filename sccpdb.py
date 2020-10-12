@@ -1,6 +1,7 @@
 import sqlite3
 from common import config, main_dead_end
 
+db_file = f"{config['DEFAULT']['data_dir']}/{config['SCCP']['db_name']}"
 
 drop_products = "DROP TABLE IF EXISTS products"
 
@@ -160,11 +161,11 @@ search_for_all_versions = """
 """
 
 
-def checkdb(db_name, tables=()):
+def checkdb(db):
     """Trivial check to see if the database exists and is populated"""
     rows = 0
     try:
-        conn = sqlite3.connect(db_name)
+        conn = sqlite3.connect(db)
     except sqlite3.Error:
         return False
     try:

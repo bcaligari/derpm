@@ -1,6 +1,6 @@
 import click
 from rpmtools import RPMlist
-from common import pretty_table, read_rpm_list
+from common import pretty_table, read_rpm_list, error_exit
 from pathlib import Path
 
 
@@ -76,9 +76,13 @@ def main(file0, file1):
       :-   multiversion install present in second but not first
       :=   multiversion install present in both
     """
-    rpm0 = RPMlist.from_name_list(read_rpm_list(file0))
-    rpm1 = RPMlist.from_name_list(read_rpm_list(file1))
-    report = diff_report(rpm0, rpm1)
+    rpm_lists = dict()
+    for file_name in (file0, file1):
+        try:
+            rpm_lists[file_name] = RPMlist.from_name_list(read_rpm_list(file_name))
+        except FileNotFoundError:
+            error_exit(f"{file_name} does not appear to exist.")
+    report = diff_report(rpm_lists[file0], rpm_lists[file1])
     print(
         "\n".join(
             pretty_table(
