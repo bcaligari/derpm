@@ -53,7 +53,7 @@ Options:
   --help     Show this message and exit.
 ```
 
-### `slebase`
+## `slebase`
 
 Identify product(s) associated with a base containing an RPM.
 
@@ -74,13 +74,17 @@ Usage: slebase.py [OPTIONS] BASE RPMLIST
     + From a module or extension that can be enabled on base.
 ```
 
-#### Which packages could not be found in this product
+Which packages could not be found in this product:
 
-`$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | grep '^-'`
+```{text}
+$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | grep '^-'`
+```
 
-#### List packages which need an additional module activated
+List packages which need an additional module activated:
 
-`$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | sed -ne '/^+/,/^$/p'`
+```{text}
+$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | sed -ne '/^+/,/^$/p'`
+```
 
 ## Implementation
 
