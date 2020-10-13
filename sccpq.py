@@ -20,17 +20,13 @@ def app():
 
 @click.command()
 @click.argument("package")
-@click.option(
-    "--base", is_flag=False, default="*", help="search within base and modules."
-)
+@click.option("--base", is_flag=False, default="*", help="search within base and modules.")
 @click.option("--ascii/--csv", default=True)
 def identify(package, base, ascii):
     """List products that include specified package."""
     rpm = RPM.from_name(package)
     if not rpm:
-        error_exit(
-            f"{package} does not appear to be in valid <name>-<version>-<release>.<arch>[.rpm]"
-        )
+        error_exit(f"{package} does not appear to be in valid <name>-<version>-<release>.<arch>[.rpm]")
     products = None
     conn = sqlite3.connect(db)
     with conn:
@@ -38,9 +34,7 @@ def identify(package, base, ascii):
         if base == "*":
             cur.execute(sccpdb.search_products_by_rpm, rpm.to_dict())
         else:
-            cur.execute(
-                sccpdb.create_product_family_temp_table, {"base_identifier": base}
-            )
+            cur.execute(sccpdb.create_product_family_temp_table, {"base_identifier": base})
             cur.execute(sccpdb.search_product_family_for_rpm, rpm.to_dict())
         products = cur.fetchall()
         cur.close()

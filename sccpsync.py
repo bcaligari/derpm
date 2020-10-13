@@ -82,9 +82,7 @@ def initdb(db, baseurl, accept, anyarch=False, cachedir=None):
     If cachedir not None then API responses are cached.
     """
     fault = False
-    product_json = get_json_from_url(
-        f"{baseurl}/products", {"Accept": accept}, cachedir
-    )
+    product_json = get_json_from_url(f"{baseurl}/products", {"Accept": accept}, cachedir)
     conn = sqlite3.connect(db)
     conn.execute(sccpdb.drop_products)
     conn.execute(sccpdb.drop_packages)

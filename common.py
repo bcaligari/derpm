@@ -58,9 +58,7 @@ def pretty_table(table, fmt="csv", colnames=None):
         if colnames:
             ruling = ["" for _ in range(ncol)]
             justified_header = map(lambda x: x[0].ljust(x[1]), zip(colnames, col_max))
-            justified_ruling = map(
-                lambda x: x[0].ljust(x[1], "-"), zip(ruling, col_max)
-            )
+            justified_ruling = map(lambda x: x[0].ljust(x[1], "-"), zip(ruling, col_max))
             out.append(" | ".join(justified_header).rstrip())
             out.append(" | ".join(justified_ruling).rstrip())
         for row in all_rows:
