@@ -101,10 +101,8 @@ insert_package2products = """
 """
 
 
-list_products_by_rpm = """
-    SELECT packages.id, packages.name, packages.version, packages.release, packages.arch,
-            package2products.package, package2products.product,
-            products.id, products.identifier, products.type, products.name
+search_products_by_rpm = """
+    SELECT products.id, products.identifier, products.type, products.name
         FROM ((packages
         INNER JOIN package2products ON packages.id = package2products.package)
         INNER JOIN products ON products.id = package2products.product)
@@ -127,10 +125,8 @@ create_product_family_temp_table = """
 """
 
 
-search_family_for_rpm = """
-    SELECT packages.id, packages.name, packages.version, packages.release, packages.arch,
-            package2products.package, package2products.product,
-            temp.prod_family.pf_id, temp.prod_family.pf_identifier, temp.prod_family.pf_type, temp.prod_family.pf_name
+search_product_family_for_rpm = """
+    SELECT temp.prod_family.pf_id, temp.prod_family.pf_identifier, temp.prod_family.pf_type, temp.prod_family.pf_name
         FROM ((packages
         INNER JOIN package2products ON packages.id = package2products.package)
         INNER JOIN temp.prod_family ON temp.prod_family.pf_id = package2products.product)

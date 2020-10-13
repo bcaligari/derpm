@@ -23,7 +23,7 @@ def error_exit(msg, exit_code=1):
 
 
 def main_dead_end(name):
-    """Little reminder that you shouldn't be calling name in vain"""
+    """Little reminder that you shouldn't be calling name in vain."""
     error_exit(f"{name} is not meant to be called directly.")
 
 

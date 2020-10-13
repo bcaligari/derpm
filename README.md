@@ -74,18 +74,6 @@ Usage: slebase.py [OPTIONS] BASE RPMLIST
     + From a module or extension that can be enabled on base.
 ```
 
-Which packages could not be found in this product:
-
-```{text}
-$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | grep '^-'`
-```
-
-List packages which need an additional module activated:
-
-```{text}
-$ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | sed -ne '/^+/,/^$/p'`
-```
-
 ## Implementation
 
 ### Known issues

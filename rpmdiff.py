@@ -61,7 +61,8 @@ def diff_report(a, b):
 @click.command()
 @click.argument("file0")
 @click.argument("file1")
-def main(file0, file1):
+@click.option("--ascii/--csv", default=True)
+def main(file0, file1, ascii):
     """
     Version diff between two lists of RPMs.
 
@@ -88,7 +89,7 @@ def main(file0, file1):
             pretty_table(
                 report,
                 colnames=["", "package", "arch", Path(file0).name, Path(file1).name],
-                fmt="ascii",
+                fmt="ascii" if ascii else "csv",
             )
         )
     )
