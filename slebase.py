@@ -40,15 +40,15 @@ def main(base, rpmlist):
             rpm_list = read_rpm_list(rpmlist)
         except FileNotFoundError:
             error_exit(f"{rpmlist} does not appear to exit.")
-        cur.execute(sccpdb.create_product_family_temp_table, {"base_identifier": base})
+        cur.execute(sccpdb.create_product_family_temp_table, {"base_product": base})
         for line in rpm_list:
             rpm = RPM.from_name(line)
             prods = []
             if not rpm:
                 key = "?"
             else:
-                cur.execute(sccpdb.search_family_for_rpm, rpm.to_dict())
-                prods = [p[8] for p in cur.fetchall()]
+                cur.execute(sccpdb.search_product_family_by_rpm, rpm.to_dict())
+                prods = [p[1] for p in cur.fetchall()]
                 if prods:
                     if base in prods:
                         key = "="

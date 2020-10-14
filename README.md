@@ -1,6 +1,8 @@
 # derpm
 
-A collection of tools to help with:
+A collection of tools to help with some of the frustration trying to find where
+an RPM came from or working through lists of RPMs.  Mostly relevant for the SLES
+world for versions 12+.
 
 * `sccpsync` - Caching the SCC packages API to a local sqlite3.
 * `sccpq` - Querying the SCC package API via the local sqlite3 cached copy.
@@ -74,21 +76,10 @@ Usage: slebase.py [OPTIONS] BASE RPMLIST
     + From a module or extension that can be enabled on base.
 ```
 
-## Implementation
+## `sccpq`
 
-### Known issues
+### `sccpq products`
 
-### TODO
+### `sccpq id`
 
-* Make it easier to call the scripts.
-* Put some better error handling rather than cascade to Python exceptions.
-
-### Files
-
-* `common.py` - Configuration and functions used by other modules.
-* `rpmtools.py` - Implements RPM representation classes.
-* `sccpdb.py` - SCC package database SQL and general functions.
-* `rpmdiff.py` - Report on the RPM version differences between two lists of RPMs.
-* `sccpsync.py` - Cache the SCC Packages API to local sqlite3 database.
-* `slebase.py` - Verify a list of rpms against a specific SLE base.
-* `sccpq.py` - Query the local SCC packages API database.
+### `sccpq search`

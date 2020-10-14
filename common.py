@@ -18,7 +18,10 @@ except FileExistsError:
 
 def error_exit(msg, exit_code=1):
     """Print msg and exit with exit_code."""
-    print(msg, file=sys.stderr)
+    if sys.stdout.isatty():
+        print(msg, file=sys.stderr)
+    else:
+        logging.error(msg)
     sys.exit(exit_code)
 
 

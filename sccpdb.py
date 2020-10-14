@@ -32,12 +32,12 @@ insert_products = """
 
 
 list_base_products = """
-    SELECT id, identifier, type, name FROM products WHERE type = 'base' ORDER BY id
+    SELECT id, identifier, type, architecture, name FROM products WHERE type = 'base' ORDER BY id
 """
 
 
 get_base_product_id_by_identifier = """
-    SELECT id, identifier, type FROM products WHERE type = 'base' AND identifier = :identifier
+    SELECT id, identifier, type FROM products WHERE type = 'base' AND identifier = :identifier ORDER BY id
 """
 
 
@@ -55,6 +55,8 @@ create_packages = """
         release         TEXT
     )
 """
+
+
 insert_packages = """
     INSERT OR IGNORE INTO packages (id, name, arch, version, release)
     VALUES (?, ?, ?, ?, ?)
@@ -77,7 +79,7 @@ insert_base2products = """
 
 
 list_products_by_base = """
-    SELECT base.id, base.identifier, base.architecture, prod.id, prod.architecture, prod.identifier, prod.type, prod.name, base2products.base, base2products.product
+    SELECT prod.id, prod.identifier, prod.type, prod.architecture, prod.name 
     FROM ((base2products
     INNER JOIN products base ON base.id = base2products.base)
     INNER JOIN products prod ON prod.id = base2products.product)
@@ -102,7 +104,7 @@ insert_package2products = """
 
 
 search_products_by_rpm = """
-    SELECT products.id, products.identifier, products.type, products.name
+    SELECT DISTINCT products.id, products.identifier, products.type, products.architecture, products.name
         FROM ((packages
         INNER JOIN package2products ON packages.id = package2products.package)
         INNER JOIN products ON products.id = package2products.product)
@@ -115,45 +117,42 @@ search_products_by_rpm = """
 
 create_product_family_temp_table = """
     CREATE TEMP TABLE prod_family AS
-    SELECT pf_id, pf_identifier, pf_type, pf_name FROM (
-        SELECT base.id, base.identifier, prod.id as pf_id, prod.identifier as pf_identifier, prod.type as pf_type, prod.name as pf_name, base2products.base, base2products.product
+    SELECT pf_id, pf_identifier, pf_type, pf_arch, pf_name FROM (
+        SELECT prod.id as pf_id, prod.identifier as pf_identifier, prod.type as pf_type, prod.architecture as pf_arch, prod.name as pf_name
         FROM ((base2products
         INNER JOIN products base ON base.id = base2products.base)
         INNER JOIN products prod ON prod.id = base2products.product)
-        WHERE base.identifier = :base_identifier
+        WHERE base.identifier = :base_product
         ORDER BY prod.id)
 """
 
 
-search_product_family_for_rpm = """
-    SELECT temp.prod_family.pf_id, temp.prod_family.pf_identifier, temp.prod_family.pf_type, temp.prod_family.pf_name
-        FROM ((packages
-        INNER JOIN package2products ON packages.id = package2products.package)
-        INNER JOIN temp.prod_family ON temp.prod_family.pf_id = package2products.product)
-        WHERE packages.name = :name
-            AND packages.version = :version
-            AND packages.release = :release
-            AND packages.arch = :arch
-"""
-
-
-search_family_for_all_versions = """
-    SELECT packages.id, packages.name, packages.version, packages.release, packages.arch,
-            package2products.package, package2products.product,
-            temp.prod_family.pf_id, temp.prod_family.pf_identifier, temp.prod_family.pf_type, temp.prod_family.pf_name
-        FROM ((packages
-        INNER JOIN package2products ON packages.id = package2products.package)
-        INNER JOIN temp.prod_family ON temp.prod_family.pf_id = package2products.product)
-        WHERE packages.name = :name
-            AND packages.arch = :arch
+search_product_family_by_rpm = """
+    SELECT DISTINCT temp.prod_family.pf_id, temp.prod_family.pf_identifier, temp.prod_family.pf_type, temp.prod_family.pf_arch, temp.prod_family.pf_name
+    FROM ((packages
+    INNER JOIN package2products ON packages.id = package2products.package)
+    INNER JOIN temp.prod_family ON temp.prod_family.pf_id = package2products.product)
+    WHERE packages.name = :name
+        AND packages.version = :version
+        AND packages.release = :release
+        AND packages.arch = :arch
 """
 
 
 search_for_all_versions = """
-    SELECT packages.id, packages.name, packages.version, packages.release, packages.arch
-        FROM packages
-        WHERE packages.name = :name
-            AND packages.arch = :arch
+    SELECT DISTINCT packages.name, packages.version, packages.release, packages.arch
+    FROM packages
+    WHERE packages.name = :name
+"""
+
+
+search_product_for_all_versions = """
+    SELECT DISTINCT packages.name, packages.version, packages.release, packages.arch
+    FROM ((packages
+    INNER JOIN package2products ON packages.id = package2products.package)
+    INNER JOIN products ON products.id = package2products.product)
+    WHERE packages.name = :name
+        AND products.identifier = :product
 """
 
 
