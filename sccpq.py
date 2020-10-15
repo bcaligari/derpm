@@ -68,22 +68,28 @@ def products(base, ascii):
 
 @click.command()
 @click.argument("package")
-@click.option("--base", is_flag=False, default="*", help="search within base and modules.")
+@click.option("--base", is_flag=False, default="*", help="search within base and related modules.")
+@click.option("--product", is_flag=False, default="*", help="search only within product.")
 @click.option("--ascii/--csv", default=True)
-def identify(package, base, ascii):
+def identify(package, product, base, ascii):
     """List products that include specified package."""
     rpm = RPM.from_name(package)
     if not rpm:
         error_exit(f"{package} does not appear to be in valid <name>-<version>-<release>.<arch>[.rpm]")
     products = None
     conn = sqlite3.connect(db)
+    query_values = rpm.to_dict()
+    query_values["base_product"] = base
+    query_values["product"] = product
     with conn:
         cur = conn.cursor()
-        if base == "*":
-            cur.execute(sccpdb.search_products_by_rpm, rpm.to_dict())
+        if product == "*" and base == "*":
+            cur.execute(sccpdb.search_products_by_rpm, query_values)
+        elif base != "*":
+            cur.execute(sccpdb.create_product_family_temp_table, query_values)
+            cur.execute(sccpdb.search_product_family_by_rpm, query_values)
         else:
-            cur.execute(sccpdb.create_product_family_temp_table, {"base_product": base})
-            cur.execute(sccpdb.search_product_family_by_rpm, rpm.to_dict())
+            cur.execute(sccpdb.search_product_by_rpm, query_values)
         products = cur.fetchall()
         cur.close()
     conn.close()

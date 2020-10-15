@@ -1,7 +1,7 @@
 # derpm
 
-A collection of tools to help with some of the frustration trying to find where
-an RPM came from or working through lists of RPMs.  Mostly relevant for the SLES
+A collection of tools to help with some of the frustrations trying to find where
+an RPM came from and working through lists of RPMs.  Mostly relevant for the SLES
 world for versions 12+.
 
 * `sccpsync` - Caching the SCC packages API to a local sqlite3.
@@ -11,7 +11,7 @@ world for versions 12+.
 * `rpmdiff` - Comparing the version differences between two lists of RPMs.
 
 These scripts are written in Python 3.8 for my own entertainment and use.  They
-are inspired by but in no other way related to my day job.
+are inspired by, but in no other way related, to my day job.
 
 ## `rpmdiff`
 
@@ -78,8 +78,63 @@ Usage: slebase.py [OPTIONS] BASE RPMLIST
 
 ## `sccpq`
 
+Query the local cache of the SCC package API.
+
+### `sccpq base`
+
+```{text}
+Usage: sccpq.py base [OPTIONS]
+
+  List base products.
+
+Options:
+  --ascii / --csv
+  --help           Show this message and exit.
+```
+
+The `base` product is what should be soft linked in `/etc/products.d/baseproduct`.
+The other products should be `modules` or `extensions`.
+
 ### `sccpq products`
+
+```{text}
+Usage: sccpq.py products [OPTIONS]
+
+  List products associated with specified base.
+
+Options:
+  --base TEXT      list only products associated with this base.
+  --ascii / --csv
+  --help           Show this message and exit.
+```
+
+The same `module` or `extension` may be associated with more than one `base`.
 
 ### `sccpq id`
 
+```{text}
+Usage: sccpq.py id [OPTIONS] PACKAGE
+
+  List products that include specified package.
+
+Options:
+  --base TEXT      search within base and related modules.
+  --product TEXT   search only within product.
+  --ascii / --csv
+  --help           Show this message and exit.
+```
+
 ### `sccpq search`
+
+Search for a package by name regardless of architecture.  Search can be limited
+to a single product (base, module, or extension).
+
+```{text}
+Usage: sccpq.py search [OPTIONS] NAME
+
+  List the versions of a package by name.
+
+Options:
+  --product TEXT  limit to product.
+  --help          Show this message and exit.
+```
