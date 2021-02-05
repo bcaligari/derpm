@@ -110,10 +110,3 @@ python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | grep '^-'`
 python slebase.py SLES_SAP/12.3/x86_64 rpm.txt | sed -ne '/^+/,/^$/p'`
 ```
 
-### Differences between two lists of RPMs
-
-#### Do a diff between two `rpm -qa` outputs
-
-```{text}
-python rpmdiff.py rpmqa.zypper-dup.txt rpmqa.fully-updated.txt
-```

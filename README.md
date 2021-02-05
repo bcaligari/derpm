@@ -8,37 +8,9 @@ world for versions 12+.
 * `sccpq` - Querying the SCC package API via the local sqlite3 cached copy.
 * `slebase` - Establishing the provenance of RPMs from the `rpm -qa` output on
    a SLE server.
-* `rpmdiff` - Comparing the version differences between two lists of RPMs.
 
 These scripts are written in Python 3.8 for my own entertainment and use.  They
 are inspired by, but in no other way related, to my day job.
-
-## `rpmdiff`
-
-Report on the RPM version differences between two lists of RPMs.
-
-```{text}
-Usage: rpmdiff.py [OPTIONS] FILE0 FILE1
-```
-
-The files can be:
-
-* Plain output of `rpm -qa`.
-* The `rpm.txt` from a `supportconfig` archive.
-
-Matching packages are listed side by side with the first column indicating
-the relationship between the version from both lists:
-
-```{text}
-    ++   present in first but not second
-    --   present in second but not first
-    ==   present in both at same revision
-    <<   version in first lower than one in second
-    >>   version in first higher than one in second
-    :+   multiversion install present in first but not second
-    :-   multiversion install present in second but not first
-    :=   multiversion install present in both
-```
 
 ## `sccpsync`
 
